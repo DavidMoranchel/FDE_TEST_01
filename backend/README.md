@@ -1,77 +1,98 @@
-# Backend Implementation
+# Backend - Client Portal API
 
-## Tech Stack Options
+FastAPI backend with hexagonal architecture for the Client Portal application.
 
-**Node.js**
-- Runtime: Node.js v18+
-- Frameworks: Express.js, Fastify, or NestJS
-- ORM: Prisma, TypeORM, or Sequelize
+## Architecture
 
-**Python**
-- Runtime: Python 3.10+
-- Frameworks: FastAPI or Django REST Framework
-- ORM: SQLAlchemy or Django ORM
+This project follows **Hexagonal Architecture** (Ports and Adapters):
 
----
+- **Domain**: Business entities and logic (User, Project, Comment)
+- **Application**: Use cases and services (AuthService, ProjectService, CommentService)
+- **Infrastructure**: Database models, repositories implementation
+- **Adapters**: HTTP controllers (FastAPI routes)
 
-## Required Endpoints
+## Setup
 
-### Authentication
-```
-POST   /api/auth/register    - User registration
-POST   /api/auth/login       - User login
-GET    /api/auth/me          - Get current user
-```
+### Prerequisites
 
-### Projects
-```
-GET    /api/projects         - List projects (filtered by role)
-POST   /api/projects         - Create project (Admin only)
-GET    /api/projects/:id     - Get project details
-PUT    /api/projects/:id     - Update project (Admin only)
-DELETE /api/projects/:id     - Delete project (Admin only)
-```
+- Docker and Docker Compose
+- Python 3.11+ (for local development)
 
-### Comments
-```
-GET    /api/projects/:id/comments  - List project comments
-POST   /api/projects/:id/comments  - Add comment
-```
+### Running with Docker Compose
 
-### Dashboard
-```
-GET    /api/dashboard        - Stats based on user role
-```
-
----
-
-## Database Schema (Suggested)
-
-**Users:** id, email, password_hash, name, role (admin/client), created_at
-
-**Projects:** id, name, description, status, client_id, created_by, created_at, updated_at
-
-**Comments:** id, project_id, user_id, content, created_at
-
----
-
-## Security Checklist
-
-- [ ] Passwords hashed (bcrypt/argon2)
-- [ ] JWT with reasonable expiration
-- [ ] Input validation
-- [ ] Role-based access control
-
----
-
-## Environment Variables
+From the project root:
 
 ```bash
-cp .env.example .env
+docker-compose up
 ```
 
----
+This will:
+- Start PostgreSQL database
+- Run Alembic migrations
+- Start FastAPI server on http://localhost:8000
 
-## API Documentation
+### API Documentation
 
-Swagger/OpenAPI should be accessible at `/api/docs`
+Once running, access:
+- Swagger UI: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
+
+### Local Development
+
+1. Create virtual environment:
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+3. Copy `.env.example` to `.env` and configure
+
+4. Run migrations:
+```bash
+alembic upgrade head
+```
+
+5. Start server:
+```bash
+uvicorn app.main:app --reload
+```
+
+## Database Migrations
+
+Create a new migration:
+```bash
+alembic revision --autogenerate -m "description"
+```
+
+Apply migrations:
+```bash
+alembic upgrade head
+```
+
+## Project Structure
+
+```
+backend/
+├── app/
+│   ├── domain/              # Business entities
+│   ├── application/         # Use cases and services
+│   │   ├── interfaces/      # Repository interfaces
+│   │   └── services/        # Business logic
+│   ├── infrastructure/      # External concerns
+│   │   ├── database.py     # SQLAlchemy setup
+│   │   ├── models/         # SQLAlchemy models
+│   │   └── repositories/   # Repository implementations
+│   ├── adapters/           # Adapters layer
+│   │   └── api/            # FastAPI routes
+│   ├── core/               # Configuration and utilities
+│   └── main.py             # FastAPI app
+├── alembic/                # Database migrations
+├── requirements.txt
+└── Dockerfile
+```
