@@ -13,7 +13,7 @@ import {
 } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
-import type { ProjectStatus } from "../types/project";
+// import type { ProjectStatus } from "../types/project";
 
 const projectSchema = z.object({
   title: z.string().min(1, "Title is required"),
