@@ -5,19 +5,17 @@ Unit tests for the backend application.
 ## Running Tests
 
 ```bash
-# Ejecutar todos los tests con coverage
+# Run all tests with coverage
 docker-compose exec backend pytest --cov=app --cov-report=html --cov-report=term
 ```
 
-## Ver Reporte de Coverage
+## Coverage Report
 
-El reporte HTML se genera dentro del contenedor pero está disponible en tu máquina local gracias al volumen montado. Simplemente abre:
+The HTML report is generated inside the container but available locally via mounted volume. Open:
 
 ```
 backend/htmlcov/index.html
 ```
-
-Desde tu editor o navegador.
 
 ## Test Structure
 
@@ -26,16 +24,15 @@ Desde tu editor o navegador.
 
 ## Coverage
 
-**Coverage actual: ~31%** (enfoque en lógica de negocio)
+**Current coverage: ~31%** (focused on business logic)
 
-**Componentes testeados:**
+**Tested components:**
 - ✅ AuthService (register, login) - 100%
 - ✅ ProjectService (CRUD operations, role-based filtering) - 97%
 - ✅ CommentService (create, get by project) - 100%
 - ✅ Security utilities (password hashing, JWT tokens) - 100%
 
-**No testeados (por diseño):**
-- Infrastructure layer (repositorios, modelos SQLAlchemy)
+**Not tested (by design):**
+- Infrastructure layer (repositories, SQLAlchemy models)
 - API endpoints (FastAPI routes)
 - External libraries
-
